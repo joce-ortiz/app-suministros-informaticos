@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold text-primary">¡Bienvenido, {{ current_user.username }}!</h1>
+        <p class="lead text-muted">Gestión integral de suministros informáticos.</p>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="bi bi-box-seam text-primary" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Inventario</h3>
+                    <p class="card-text text-muted">Consulta el stock, busca productos y gestiona el almacén.</p>
+                    <a href="{{ url_for('product_routes.product_list') }}" class="btn btn-outline-primary stretched-link">Ver Productos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="bi bi-truck text-success" style="font-size: 3rem;"></i>
+                    <h3 class="card-title mt-3">Proveedores</h3>
+                    <p class="card-text text-muted">Gestiona la agenda de contactos y datos de facturación.</p>
+                    <a href="{{ url_for('supplier_routes.supplier_list') }}" class="btn btn-outline-success stretched-link">Ver Proveedores</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    {% if current_user.role == 'admin' %}
+                        <i class="bi bi-graph-up-arrow text-warning" style="font-size: 3rem;"></i>
+                        <h3 class="card-title mt-3">Estadísticas</h3>
+                        <p class="card-text text-muted">Analiza el rendimiento del inventario y alertas.</p>
+                        <a href="{{ url_for('product_routes.dashboard') }}" class="btn btn-outline-warning stretched-link">Ir al Dashboard</a>
+                    {% else %}
+                        <i class="bi bi-cart3 text-info" style="font-size: 3rem;"></i>
+                        <h3 class="card-title mt-3">Mis Compras</h3>
+                        <p class="card-text text-muted">Revisa tu historial de pedidos realizados.</p>
+                        <a href="{{ url_for('sale_routes.my_sales') }}" class="btn btn-outline-info stretched-link">Ver Historial</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

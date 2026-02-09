@@ -1,0 +1,114 @@
+/* --- 1. FONDO Y FUENTES --- */
+body {
+    /* Fondo con degradado suave azul-violeta muy moderno */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Poppins', sans-serif; /* Usamos la nueva fuente */
+    color: #444;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600; /* Negritas más elegantes */
+    color: #2c3e50;
+}
+
+/* --- 2. NAVBAR MEJORADO --- */
+.navbar {
+    /* Degradado profundo y elegante */
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+    backdrop-filter: blur(10px); /* Efecto borroso detrás (estilo Apple) */
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #ffc107 !important; /* Amarillo al pasar el mouse */
+    transform: translateY(-1px);
+}
+
+/* --- 3. TARJETAS (CARDS) CON EFECTO VIDRIO --- */
+.card {
+    background: rgba(255, 255, 255, 0.9); /* Ligeramente transparente */
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra difusa grande */
+    transition: all 0.3s ease;
+    overflow: hidden; /* Para que las imágenes no se salgan */
+}
+
+.card:hover {
+    transform: translateY(-10px); /* Flota hacia arriba */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: transparent; /* Transparente para ver el fondo de la card */
+    border-bottom: 2px solid #f0f2f5;
+    padding: 20px;
+    font-size: 1.1rem;
+    color: #1e3c72;
+}
+
+/* --- 4. BOTONES REFINADOS --- */
+.btn {
+    border-radius: 50px; /* Botones totalmente redondos (Pill shape) */
+    padding: 10px 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+}
+
+.btn-success {
+    background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(90deg, #cb2d3e 0%, #ef473a 100%);
+    border: none;
+}
+
+/* --- 5. TABLAS MODERNAS --- */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.table thead th {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 15px;
+}
+
+.table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+}
+
+/* --- 6. FOOTER --- */
+footer {
+    background: #1a252f;
+    margin-top: 50px;
+}

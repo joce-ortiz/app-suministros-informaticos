@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>{{ title }}</h2>
+        {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('supplier_routes.create_supplier') }}" class="btn btn-primary">
+                + Nuevo Proveedor
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>CIF</th>
+                            <th>Desc. %</th>
+                            {% if current_user.role == 'admin' %}
+                                <th>Acciones</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for supplier in suppliers %}
+                        <tr>
+                            <td class="fw-bold">{{ supplier.nombre_empresa }}</td>
+                            <td>{{ supplier.telefono or '-' }}</td>
+                            <td>{{ supplier.direccion or '-' }}</td>
+                            <td>{{ supplier.cif or '-' }}</td>
+                            <td>{{ supplier.descuento_porcentaje }}%</td>
+
+                            {% if current_user.role == 'admin' %}
+                                <td>
+                                    <a href="{{ url_for('supplier_routes.update_supplier', supplier_id=supplier.id) }}" class="btn btn-secondary btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <form action="{{ url_for('supplier_routes.delete_supplier', supplier_id=supplier.id) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm('¿Eliminar a este proveedor? Esto borrará sus datos pero NO sus productos.');">
+                                        <input type="submit" value="Eliminar" class="btn btn-danger btn-sm">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">No hay proveedores registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

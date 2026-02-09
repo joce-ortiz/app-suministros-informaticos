@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="mb-4">👥 Gestión de Usuarios</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Rol Actual</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td class="fw-bold">{{ user.username }}</td>
+                        <td>
+                            {% if user.role == 'admin' %}
+                                <span class="badge bg-warning text-dark">Administrador</span>
+                            {% else %}
+                                <span class="badge bg-info">Cliente</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.id != current_user.id %}
+                                {% if user.role == 'cliente' %}
+                                    <form action="{{ url_for('auth_routes.change_role', user_id=user.id, new_role='admin') }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                            ⬆️ Hacer Admin
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{ url_for('auth_routes.change_role', user_id=user.id, new_role='cliente') }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            ⬇️ Hacer Cliente
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted small">No puedes editar tu propio rol</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.id != current_user.id %}
+                                <a href="{{ url_for('auth_routes.edit_user', user_id=user.id) }}" class="btn btn-primary btn-sm">
+                                    ✏️ Editar
+                                </a>
+                            {% else %}
+                                <span class="badge bg-secondary">Tú (No editable)</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mb-4 align-items-center">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>{{ title }}</h2>
+
+        <div>
+            <a href="{{ url_for('product_routes.generate_pdf') }}" class="btn btn-outline-danger me-2">
+                📄 Descargar PDF
+            </a>
+
+            {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('product_routes.create_product') }}" class="btn btn-primary">
+                    + Crear Nuevo Producto
+                </a>
+            {% endif %}
+        </div>
+    </div>
+        {# 2. Formulario de Búsqueda (Ocupa el centro, se expande en móvil) #}
+        <div class="col-12 col-md-6 col-lg-5 mb-3 mb-md-0">
+            <form action="{{ url_for('product_routes.product_list') }}" method="GET" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="Buscar por nombre o referencia..."
+                           value="{{ current_query if current_query else '' }}">
+                    <button class="btn btn-outline-primary" type="submit">🔍 Buscar</button>
+
+                    {% if current_query %}
+                        <a href="{{ url_for('product_routes.product_list') }}" class="btn btn-outline-secondary">✖ Limpiar</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        {# 3. Botón Crear Producto (Alineado a la derecha en pantallas grandes) #}
+        <div class="col-12 col-md-auto ms-md-auto text-end">
+             {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('product_routes.create_product') }}" class="btn btn-primary">
+                    + Crear Nuevo Producto
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Bloque de Alertas de Stock #}
+    {% if alerts %}
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">¡Alerta de Stock Bajo!</h4>
+            <p>Los siguientes productos han caído por debajo del 10% de su stock objetivo y necesitan ser reabastecidos:</p>
+            <hr>
+            <ul>
+                {% for product in alerts %}
+                    <li>
+                        <strong>{{ product.nombre }}</strong> (Ref: {{ product.referencia }}) -
+                        Stock Actual: {{ product.cantidad_stock }}
+                        (Umbral: {{ (product.stock_objetivo * 0.1)|int }})
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {# Tabla de Productos #}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Referencia</th>
+                            <th>Precio</th>
+                            <th>Stock Actual</th>
+                            <th>Alerta</th>
+                            {% if current_user.role == 'admin' %}
+                            <th>Acciones</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.nombre }}</td>
+                            <td>{{ product.referencia }}</td>
+                            <td>€{{ "%.2f"|format(product.precio) }}</td>
+                            <td>{{ product.cantidad_stock }}</td>
+                            <td>
+                                {% if product.stock_alert %}
+                                    <span class="badge bg-danger">Bajo</span>
+                                {% else %}
+                                    <span class="badge bg-success">OK</span>
+                                {% endif %}
+                            </td>
+
+                            {#
+                                SOLUCIÓN A LA ANIDACIÓN (admin vs user):
+                                La celda <td> está dentro del bloque if/else para asegurar la estructura de la tabla.
+                            #}
+                            {% if current_user.role == 'admin' %}
+                                <td>
+                                    <a href="{{ url_for('product_routes.update_product', product_id=product.id) }}" class="btn btn-secondary btn-sm">
+                                        Editar
+                                    </a>
+
+                                    <form action="{{ url_for('product_routes.delete_product', product_id=product.id) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirm('¿Estás seguro de que quieres eliminar este producto?');">
+                                        <input type="submit" value="Eliminar" class="btn btn-danger btn-sm">
+                                    </form>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <form action="{{ url_for('sale_routes.buy_product', product_id=product.id) }}" method="POST" class="d-flex gap-2">
+                                        <input type="number" name="cantidad" value="1" min="1" max="{{ product.cantidad_stock }}" class="form-control form-control-sm" style="width: 60px;">
+                                        <button type="submit" class="btn btn-success btn-sm">🛒 Comprar</button>
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center">No hay productos en el inventario.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div> {# Cierre de table-responsive #}
+        </div>
+    </div>
+{% endblock %}
